@@ -3,12 +3,12 @@ import '../styles/global.css';
 import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { APIProvider } from '@/api';
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { config } from '@/components/ui/gluestack-ui-provider/config';
 import { hydrateAuth, loadSelectedTheme } from '@/lib';
 
@@ -41,8 +41,14 @@ export default function RootLayout() {
   return (
     <Providers>
       <Stack>
-        <Stack.Screen name="main/index" options={{ headerShown: false }} />
+        <Stack.Screen name="main" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+        <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+        <Stack.Screen name="auth/register" options={{ headerShown: false }} />
+        <Stack.Screen name="profile" options={{ title: 'Perfil' }} />
+        <Stack.Screen name="settings" options={{ title: 'Configurações' }} />
+        <Stack.Screen name="notes" options={{ title: 'Notas' }} />
+        <Stack.Screen name="notes/create" options={{ title: 'Nova Nota' }} />
       </Stack>
     </Providers>
   );
@@ -55,7 +61,9 @@ function Providers({ children }: { children: React.ReactNode }) {
   return (
     <GestureHandlerRootView style={[styles.container, theme]}>
       <KeyboardProvider>
-        <APIProvider>{children}</APIProvider>
+        <GluestackUIProvider>
+          <APIProvider>{children}</APIProvider>
+        </GluestackUIProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>
   );
