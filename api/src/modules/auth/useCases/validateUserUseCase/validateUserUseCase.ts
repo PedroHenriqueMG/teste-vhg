@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '../../../user/repositories/UserRepository';
+import { UserRepository } from '../../repositories/UserRepository';
 import { compare } from 'bcrypt';
 import { AuthValuesIncorrectException } from '../../exceptions/AuthValuesIncorrectException';
 

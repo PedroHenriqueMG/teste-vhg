@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
-import { UserRepository } from 'src/modules/user/repositories/UserRepository';
+import { UserRepository } from 'src/modules/auth/repositories/UserRepository';
 import { PrismaUserRepository } from './prisma/repositories/user/PrismaUserRepository';
-import { NoteRepository } from 'src/modules/note/repository/noteRepository';
-import { PrismaNoteRepository } from './prisma/repositories/note/PrismaNoteRepository';
+import { ActivityRepository } from 'src/modules/activity/repository/ActivityRepository';
+import { PrismaActivityRepository } from './prisma/repositories/activity/PrismaActivityRepository';
 
 @Module({
   providers: [
@@ -13,10 +13,10 @@ import { PrismaNoteRepository } from './prisma/repositories/note/PrismaNoteRepos
       useClass: PrismaUserRepository,
     },
     {
-      provide: NoteRepository,
-      useClass: PrismaNoteRepository,
+      provide: ActivityRepository,
+      useClass: PrismaActivityRepository,
     },
   ],
-  exports: [UserRepository, NoteRepository],
+  exports: [UserRepository, ActivityRepository],
 })
 export class DatabaseModule {}

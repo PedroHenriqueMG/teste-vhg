@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { User } from 'src/modules/user/entities/User';
+import { User } from 'src/modules/auth/entities/User';
 export class AuthenticatedRequestModel extends Request {
   user: {
     id: string;
