@@ -12,7 +12,6 @@ export class SignInBody {
   email: string;
 
   @IsStringCustom()
-  @MinLengthCustom(8)
   @ApiProperty()
   password: string;
 }
