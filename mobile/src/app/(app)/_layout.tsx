@@ -1,8 +1,15 @@
+import { useAuth } from '@/lib';
 import { Slot, useRouter } from 'expo-router';
 import { View, TouchableOpacity, Text } from 'react-native';
 
 export default function AuthorizedLayout() {
   const router = useRouter();
+  const { status } = useAuth();
+
+  if (status !== 'signIn') {
+    router.push('/auth/login');
+  }
+
   return (
     <View className="flex-1 bg-white">
       <Slot />

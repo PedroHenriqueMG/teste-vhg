@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import * as SecureStore from 'expo-secure-store';
 
 import { createSelectors } from '../utils';
 import type { TokenType } from './utils';
@@ -10,23 +12,68 @@ interface AuthState {
   token: TokenType | null;
   status: 'idle' | 'signOut' | 'signIn';
   signIn: (data: LoginFormData) => Promise<void>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
 }
 
-const _useAuth = create<AuthState>((set, get) => ({
-  status: 'idle',
-  token: null,
-  signIn: async (data) => {
-    const response = await client.post('/signIn', data);
-    const token = response.data.token;
-    setToken(token);
-    set({ status: 'signIn', token });
+const secureStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    try {
+      return await SecureStore.getItemAsync(name);
+    } catch (error) {
+      console.error('Error getting item from SecureStore:', error);
+      return null;
+    }
   },
-  signOut: () => {
-    removeToken();
-    set({ status: 'signOut', token: null });
+  setItem: async (name: string, value: string): Promise<void> => {
+    try {
+      await SecureStore.setItemAsync(name, value);
+    } catch (error) {
+      console.error('Error setting item in SecureStore:', error);
+    }
   },
-}));
+  removeItem: async (name: string): Promise<void> => {
+    try {
+      await SecureStore.deleteItemAsync(name);
+    } catch (error) {
+      console.error('Error removing item from SecureStore:', error);
+    }
+  },
+};
+
+const _useAuth = create<AuthState>()(
+  persist(
+    (set, get) => ({
+      status: 'idle',
+      token: null,
+
+      signIn: async (data) => {
+        try {
+          const response = await client.post('/signIn', data);
+          const token = response.data.access_token;
+          await setToken(token);
+          set({ status: 'signIn', token });
+        } catch (error) {
+          console.error('Error signing in:', error);
+          throw error;
+        }
+      },
+
+      signOut: async () => {
+        try {
+          await removeToken();
+          set({ status: 'signOut', token: null });
+        } catch (error) {
+          console.error('Error signing out:', error);
+        }
+      },
+    }),
+    {
+      name: 'auth-storage',
+      storage: createJSONStorage(() => secureStorage),
+      partialize: (state) => ({ token: state.token, status: state.status }),
+    }
+  )
+);
 
 export const useAuth = createSelectors(_useAuth);
 
