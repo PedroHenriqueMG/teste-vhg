@@ -5,7 +5,6 @@ export class PrismaUserMapper {
   static toPrisma({
     createdAt,
     email,
-    name,
     password,
     id,
     updatedAt,
@@ -14,7 +13,6 @@ export class PrismaUserMapper {
       updatedAt,
       createdAt,
       email,
-      name,
       password,
       id,
     };
@@ -24,7 +22,6 @@ export class PrismaUserMapper {
     id,
     createdAt,
     email,
-    name,
     password,
     updatedAt,
   }: UserRaw): User {
@@ -33,7 +30,6 @@ export class PrismaUserMapper {
         updatedAt,
         createdAt,
         email,
-        name,
         password,
       },
       id,

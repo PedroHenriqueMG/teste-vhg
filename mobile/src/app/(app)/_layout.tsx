@@ -8,7 +8,10 @@ export default function AuthorizedLayout() {
       <Slot />
       {/* Bottom Navigation */}
       <View className="absolute bottom-0 left-0 right-0 flex-row bg-white py-3 px-8 justify-between items-center border-t border-gray-200">
-        <TouchableOpacity className="items-center" onPress={() => {}}>
+        <TouchableOpacity
+          className="items-center"
+          onPress={() => router.push('/auth/register')}
+        >
           <Text className="text-xl">💬</Text>
           <Text className="text-xs text-gray-500">Chat</Text>
         </TouchableOpacity>

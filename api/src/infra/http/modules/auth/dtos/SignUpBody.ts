@@ -15,9 +15,4 @@ export class SignUpBody {
   @IsStringCustom()
   @ApiProperty()
   password: string;
-
-  @IsNotEmptyCustom()
-  @IsStringCustom()
-  @ApiProperty()
-  name: string;
 }

@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 import { Replace } from 'src/types/replace';
 
 interface UserSchema {
-  name: string;
   email: string;
   password: string;
   createdAt: Date;
@@ -51,14 +50,6 @@ export class User {
 
   set password(password: string) {
     this.props.password = password;
-  }
-
-  get name(): string {
-    return this.props.name;
-  }
-
-  set name(name: string) {
-    this.props.name = name;
   }
 
   get createdAt(): Date {

@@ -6,7 +6,6 @@ import { UserRepository } from 'src/modules/auth/repositories/UserRepository';
 
 interface SignUpRequest {
   email: string;
-  name: string;
   password: string;
 }
 
@@ -14,14 +13,13 @@ interface SignUpRequest {
 export class SignUpUseCase {
   constructor(private userRepository: UserRepository) {}
 
-  async execute({ email, name, password }: SignUpRequest) {
+  async execute({ email, password }: SignUpRequest) {
     const userAlreadyExist = await this.userRepository.findByEmail(email);
 
     if (userAlreadyExist) throw new UserWithSameEmailException();
 
     const user = new User({
       email,
-      name,
       password: await hash(password, 10),
     });
 

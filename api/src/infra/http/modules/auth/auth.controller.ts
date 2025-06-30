@@ -40,10 +40,9 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.CREATED)
   async signUp(@Body() body: SignUpBody) {
-    const { email, name, password } = body;
+    const { email, password } = body;
     await this.signUpUseCase.execute({
       email,
-      name,
       password,
     });
   }

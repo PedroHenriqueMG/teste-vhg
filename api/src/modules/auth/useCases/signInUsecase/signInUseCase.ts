@@ -15,7 +15,6 @@ export class SignInUseCase {
     const payload: UserPayload = {
       sub: user.id,
       email: user.email,
-      name: user.name,
       createdAt: user.createdAt.toJSON(),
     };
 

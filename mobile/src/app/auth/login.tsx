@@ -1,19 +1,46 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { Text, View, Image, TouchableOpacity, Alert } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Input, InputSlot, InputField, InputIcon } from '@/components/ui/input';
 import { Eye, EyeOff } from 'lucide-react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@/lib';
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(4),
+});
+
+export type LoginFormData = z.infer<typeof schema>;
 
 export default function Login() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(schema),
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { signIn } = useAuth();
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await signIn(data);
+      Alert.alert('Login realizado com sucesso');
+      router.push('/main');
+    } catch (error) {
+      Alert.alert('Erro ao fazer login', 'Verifique suas credenciais');
+      console.error(error);
+    }
+  };
 
   return (
     <View className="size-full flex-1 items-center justify-center p-6 bg-white">
       <View className="w-full max-w-sm space-y-6">
-        {/* Logo */}
         <View className="items-center mb-2">
           <View className="rounded-lg p-2">
             <Image
@@ -23,51 +50,69 @@ export default function Login() {
           </View>
         </View>
 
-        {/* Título */}
         <Text className="text-3xl font-extrabold text-center mb-2">Login</Text>
 
-        {/* Inputs */}
         <View className="space-y-3">
-          {/* E-mail */}
-          <Input variant="underlined" size="lg" className="px-0">
-            <InputField
-              placeholder="E-mail"
-              placeholderTextColor="#888"
-              autoCapitalize="none"
-              keyboardType="email-address"
-              value={email}
-              onChangeText={setEmail}
-              className="text-base text-black px-0"
-            />
-          </Input>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input variant="underlined" size="lg" className="px-0">
+                <InputField
+                  placeholder="E-mail"
+                  placeholderTextColor="#888"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  className="text-base text-black px-0"
+                />
+              </Input>
+            )}
+          />
+          {errors.email && (
+            <Text className="text-red-500 text-sm">{errors.email.message}</Text>
+          )}
 
-          {/* Senha */}
-          <Input variant="underlined" size="lg" className="px-0">
-            <InputField
-              placeholder="Senha"
-              placeholderTextColor="#888"
-              secureTextEntry={!showPassword}
-              value={password}
-              onChangeText={setPassword}
-              className="text-base text-black px-0"
-            />
-            <InputSlot onPress={() => setShowPassword((v) => !v)}>
-              <InputIcon as={showPassword ? EyeOff : Eye} color="#888" />
-            </InputSlot>
-          </Input>
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input variant="underlined" size="lg" className="px-0">
+                <InputField
+                  placeholder="Senha"
+                  placeholderTextColor="#888"
+                  secureTextEntry={!showPassword}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  className="text-base text-black px-0"
+                />
+                <InputSlot onPress={() => setShowPassword((v) => !v)}>
+                  <InputIcon as={showPassword ? EyeOff : Eye} color="#888" />
+                </InputSlot>
+              </Input>
+            )}
+          />
+          {errors.password && (
+            <Text className="text-red-500 text-sm">
+              {errors.password.message}
+            </Text>
+          )}
         </View>
 
-        {/* Botão */}
         <Button
           variant="solid"
           size="lg"
           className="mt-4 bg-black"
-          onPress={() => router.push('/main')}
+          onPress={handleSubmit(onSubmit)}
         >
-          <ButtonText className="text-white">Login</ButtonText>
+          <ButtonText className="text-white">
+            {isSubmitting ? 'Entrando...' : 'Login'}
+          </ButtonText>
         </Button>
 
-        {/* Link para login */}
         <View className="flex-row justify-center items-center mt-2">
           <Text className="text-base text-gray-700">Não possui conta? </Text>
           <TouchableOpacity onPress={() => router.push('/auth/register')}>
