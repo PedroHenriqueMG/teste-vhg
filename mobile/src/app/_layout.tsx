@@ -40,11 +40,11 @@ export default function RootLayout() {
 
   return (
     <Providers>
-      <Stack>
-        <Stack.Screen name="main" options={{ headerShown: false }} />
-        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/login" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/register" options={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="main" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="auth/login" />
+        <Stack.Screen name="auth/register" />
         <Stack.Screen name="profile" options={{ title: 'Perfil' }} />
         <Stack.Screen name="settings" options={{ title: 'Configurações' }} />
         <Stack.Screen name="notes" options={{ title: 'Notas' }} />

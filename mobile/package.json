@@ -81,6 +81,7 @@
     "react-hook-form": "^7.53.0",
     "react-native": "0.76.9",
     "react-native-css-interop": "^0.1.22",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-edge-to-edge": "^1.1.2",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.20.2",

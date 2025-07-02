@@ -11,6 +11,7 @@ import { client } from '@/api';
 interface AuthState {
   token: TokenType | null;
   status: 'idle' | 'signOut' | 'signIn';
+  userEmail: string | null;
   signIn: (data: LoginFormData) => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -45,13 +46,16 @@ const _useAuth = create<AuthState>()(
     (set, get) => ({
       status: 'idle',
       token: null,
+      userEmail: null,
 
       signIn: async (data) => {
         try {
           const response = await client.post('/signIn', data);
           const token = response.data.access_token;
+          const userEmail = response.data.user.props.email;
+
           await setToken(token);
-          set({ status: 'signIn', token });
+          set({ status: 'signIn', token, userEmail });
         } catch (error) {
           console.error('Error signing in:', error);
           throw error;
@@ -61,7 +65,7 @@ const _useAuth = create<AuthState>()(
       signOut: async () => {
         try {
           await removeToken();
-          set({ status: 'signOut', token: null });
+          set({ status: 'signOut', token: null, userEmail: null });
         } catch (error) {
           console.error('Error signing out:', error);
         }
@@ -70,11 +74,13 @@ const _useAuth = create<AuthState>()(
     {
       name: 'auth-storage',
       storage: createJSONStorage(() => secureStorage),
-      partialize: (state) => ({ token: state.token, status: state.status }),
+      partialize: (state) => ({
+        token: state.token,
+        status: state.status,
+        userEmail: state.userEmail,
+      }),
     }
   )
 );
 
 export const useAuth = createSelectors(_useAuth);
-
-export const signOut = () => _useAuth.getState().signOut();
