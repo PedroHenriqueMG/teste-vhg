@@ -8,6 +8,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/lib';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
+import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
 
 const schema = z.object({
   email: z.string().email(),
@@ -26,14 +28,16 @@ export default function Login() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useAuth();
+  const showError = useAlertError();
+  const showSuccess = useAlertSuccess();
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       await signIn(data);
-      Alert.alert('Login realizado com sucesso');
+      showSuccess('Login realizado com sucesso');
       router.push('/main');
     } catch (error) {
-      Alert.alert('Erro ao fazer login', 'Verifique suas credenciais');
+      showError('Erro ao fazer login, verifique suas credenciais');
       console.error(error);
     }
   };

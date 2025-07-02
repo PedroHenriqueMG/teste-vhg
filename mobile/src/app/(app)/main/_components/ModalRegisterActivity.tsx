@@ -1,5 +1,7 @@
 import { client } from '@/api';
 import { getToken } from '@/lib/auth/utils';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
+import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -44,6 +46,8 @@ export function ModalRegisterActivity({
 
   const [intensidadeOpen, setIntensidadeOpen] = useState(false);
   const [duracaoOpen, setDuracaoOpen] = useState(false);
+  const showSuccess = useAlertSuccess();
+  const showError = useAlertError();
 
   const intensidadeItems: {
     label: (typeof intensidades)[number];
@@ -67,11 +71,12 @@ export function ModalRegisterActivity({
         duration: data.duration,
       });
 
+      showSuccess('Atividade registrada com sucesso');
       reset();
       onCount();
       onClose();
     } catch (error) {
-      console.error(error);
+      showError('Erro ao registrar atividade');
     }
   };
 

@@ -8,6 +8,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ModalEditActivity } from './_components/ModalEditActivity';
 import { ModalDeleteActivity } from './_components/ModalDeleteActivity';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
 
 export default function Main() {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -17,13 +18,14 @@ export default function Main() {
     null
   );
   const [count, setCount] = useState(0);
+  const showError = useAlertError();
 
   const fetchActivities = async () => {
     try {
       const response = await client.get('/activity');
       return response.data;
     } catch (error) {
-      console.error(error);
+      showError('Erro ao carregar atividades');
       return [];
     }
   };
@@ -65,11 +67,8 @@ export default function Main() {
           <View className="bg-white rounded-xl mt-3 mx-4 p-4 shadow border border-gray-100 items-center">
             <Text className="text-base font-medium mb-2">Atividades</Text>
             <View className="w-24 h-12 items-center justify-center">
-              <View className="w-24 h-12 rounded-b-full border-8 border-t-0 border-gray-300 border-b-black overflow-hidden items-center justify-end"></View>
-              <View className="absolute w-full h-full items-center justify-center top-0 left-0">
-                <Text className="text-2xl font-bold">{activities?.length}</Text>
-                <Text className="text-xs text-gray-500">registrados</Text>
-              </View>
+              <Text className="text-2xl font-bold">{activities?.length}</Text>
+              <Text className="text-xs text-gray-500">registrados</Text>
             </View>
           </View>
 

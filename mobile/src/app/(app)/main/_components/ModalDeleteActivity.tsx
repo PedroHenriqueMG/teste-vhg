@@ -1,4 +1,6 @@
 import { client } from '@/api';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
+import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
 import { Activity } from '@/types/activity';
 import React, { useState } from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
@@ -15,14 +17,18 @@ export function ModalDeleteActivity({
   activity: Activity;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const showSuccess = useAlertSuccess();
+  const showError = useAlertError();
+
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
       await client.delete(`/activity/${activity.id}`);
+      showSuccess('Atividade excluída com sucesso');
       onCount();
       onClose();
     } catch (error) {
-      console.error(error);
+      showError('Erro ao excluir atividade');
     } finally {
       setIsDeleting(false);
     }

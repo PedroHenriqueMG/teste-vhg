@@ -3,10 +3,12 @@ import { LogOut, Trash2, Pencil } from 'lucide-react-native';
 import { useAuth } from '@/lib';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
 
 export default function Settings() {
   const { signOut, userEmail } = useAuth();
   const router = useRouter();
+  const showError = useAlertError();
 
   return (
     <SafeAreaView className="flex-1 bg-white pt-10 px-4">
@@ -45,8 +47,12 @@ export default function Settings() {
         <TouchableOpacity
           className="flex-row items-center bg-gray-50 rounded-xl px-4 py-3 shadow-sm"
           onPress={async () => {
-            await signOut();
-            router.push('/auth/login');
+            try {
+              await signOut();
+              router.push('/auth/login');
+            } catch (error) {
+              showError('Erro ao sair');
+            }
           }}
         >
           <LogOut size={22} color="#222" className="mr-2" />

@@ -11,6 +11,8 @@ import { APIProvider } from '@/api';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { config } from '@/components/ui/gluestack-ui-provider/config';
 import { hydrateAuth, loadSelectedTheme } from '@/lib';
+import { AlertErrorProvider } from '@/lib/hooks/use-alert-error';
+import { AlertSuccessProvider } from '@/lib/hooks/use-alert-success';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -62,7 +64,11 @@ function Providers({ children }: { children: React.ReactNode }) {
     <GestureHandlerRootView style={[styles.container, theme]}>
       <KeyboardProvider>
         <GluestackUIProvider>
-          <APIProvider>{children}</APIProvider>
+          <APIProvider>
+            <AlertErrorProvider>
+              <AlertSuccessProvider>{children}</AlertSuccessProvider>
+            </AlertErrorProvider>
+          </APIProvider>
         </GluestackUIProvider>
       </KeyboardProvider>
     </GestureHandlerRootView>

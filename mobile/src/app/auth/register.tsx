@@ -8,6 +8,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { client } from '@/api';
+import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
 
 const schema = z
   .object({
@@ -32,6 +34,8 @@ export default function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const showSuccess = useAlertSuccess();
+  const showError = useAlertError();
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
@@ -39,10 +43,10 @@ export default function Register() {
         email: data.email,
         password: data.password,
       });
-      Alert.alert('Conta criada com sucesso!');
+      showSuccess('Conta criada com sucesso!');
       router.push('/auth/login');
     } catch (error) {
-      Alert.alert('Erro ao criar conta', 'Verifique suas credenciais');
+      showError('Erro ao criar conta, verifique suas credenciais');
     }
   };
 

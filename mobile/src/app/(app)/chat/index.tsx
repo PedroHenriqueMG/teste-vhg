@@ -14,8 +14,12 @@ import {
 } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { client } from '@/api';
+import { ArrowLeft, Pencil } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
 
 interface Message {
+  id: string;
   text: string;
   from: 'user' | 'ia';
 }
@@ -24,16 +28,23 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const flatListRef = useRef<FlatList>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [chatName, setChatName] = useState('Nome do chat');
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const showError = useAlertError();
 
   const handleSend = async () => {
     try {
       if (!input.trim()) return;
 
-      setMessages((prev) => [...prev, { text: input, from: 'user' }]);
-
       const userMessage = input;
       setInput('');
+
+      setMessages((prev) => [
+        ...prev,
+        { id: String(Date.now()), text: userMessage, from: 'user' },
+      ]);
 
       const response = await client.post('/chat/message', {
         input: userMessage,
@@ -48,6 +59,7 @@ export default function Chat() {
         flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
     } catch (error) {
+      showError('Erro ao enviar mensagem');
       console.error(error);
     }
   };
@@ -58,14 +70,27 @@ export default function Chat() {
         className="flex-row items-center justify-between px-4 pt-6 pb-4 border-b border-gray-200"
         style={{ paddingTop: insets.top + 12 }}
       >
-        <TouchableOpacity>
-          <Ionicons name="arrow-back" size={24} color="#222" />
+        <TouchableOpacity onPress={() => router.push('/main')}>
+          <ArrowLeft size={24} color="#222" />
         </TouchableOpacity>
-        <Text className="text-lg font-bold flex-1 text-center -ml-6">
-          Nome do chat
-        </Text>
-        <TouchableOpacity>
-          <MaterialCommunityIcons name="paperclip" size={22} color="#222" />
+        {isEditing ? (
+          <TextInput
+            className="text-lg font-bold flex-1 text-center -ml-6 bg-transparent"
+            value={chatName}
+            onChangeText={setChatName}
+            onBlur={() => setIsEditing(false)}
+            autoFocus
+            maxLength={40}
+            placeholder="Nome do chat"
+            placeholderTextColor="#888"
+          />
+        ) : (
+          <Text className="text-lg font-bold flex-1 text-center -ml-6">
+            {chatName}
+          </Text>
+        )}
+        <TouchableOpacity onPress={() => setIsEditing(true)}>
+          <Pencil size={22} color="#222" />
         </TouchableOpacity>
       </View>
 
@@ -76,7 +101,7 @@ export default function Chat() {
         contentContainerStyle={{ flexGrow: 1, padding: 16, paddingBottom: 80 }}
         renderItem={({ item }) => (
           <View
-            key={item.id}
+            key={item.text}
             className={`mb-3 flex-row ${item.from === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <View
@@ -100,7 +125,7 @@ export default function Chat() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={insets.bottom + 24}
-        style={{ position: 'absolute', left: 0, right: 0, bottom: 28 }}
+        style={{ position: 'absolute', left: 0, right: 0, bottom: 40 }}
       >
         <View
           className="flex-row items-center bg-[#F3F3F3] px-3 py-2 m-3 rounded-xl"
