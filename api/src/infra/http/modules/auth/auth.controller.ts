@@ -29,11 +29,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   async signIn(@Request() request: AuthRequestModel) {
-    const access_token = await this.signInUseCase.execute({
+    const { token, user } = await this.signInUseCase.execute({
       user: request.user,
     });
 
-    return { access_token };
+    return { access_token: token, user };
   }
 
   @Post('signUp')

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { User } from 'src/modules/auth/entities/User';
 import { UserPayload } from '../../models/UserPayload';
 import { JwtService } from '@nestjs/jwt';
+import { UserRepository } from '../../repositories/UserRepository';
+import { UserNotFoundException } from '../../exceptions/UserNotFound';
 
 interface SignInRequest {
   user: User;
@@ -9,17 +11,29 @@ interface SignInRequest {
 
 @Injectable()
 export class SignInUseCase {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private userRepository: UserRepository,
+  ) {}
 
   async execute({ user }: SignInRequest) {
+    const userData = await this.userRepository.findByEmail(user.email);
+
+    if (!userData) throw new UserNotFoundException();
+
     const payload: UserPayload = {
-      sub: user.id,
-      email: user.email,
-      createdAt: user.createdAt.toJSON(),
+      sub: userData.id,
+      email: userData.email,
+      createdAt: userData.createdAt.toJSON(),
     };
 
     const jwtToken = this.jwtService.sign(payload);
 
-    return jwtToken;
+    const { password: _, ...userWithoutPassword } = userData;
+
+    return {
+      token: jwtToken,
+      user: userWithoutPassword,
+    };
   }
 }

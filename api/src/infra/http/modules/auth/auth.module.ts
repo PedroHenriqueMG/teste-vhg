@@ -9,10 +9,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/modules/auth/strategies/jwt.strategy';
 import { env } from 'src/env';
 import { SignUpUseCase } from 'src/modules/auth/useCases/signUpUseCase/signUpUseCase';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     DatabaseModule,
+    PassportModule,
     JwtModule.register({
       secret: env.JWT_SECRET,
       signOptions: { expiresIn: env.JWT_EXPIRE },

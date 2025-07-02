@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Activity } from '../entities/Activity';
-import { NoteNotFoundException } from '../exceptions/ActivityNotFound';
+import { ActivityNotFoundException } from '../exceptions/ActivityNotFound';
 import { ActivityRepository } from '../repository/ActivityRepository';
 import { ActivityIntensity } from '@prisma/client';
 
@@ -44,7 +44,7 @@ export class ActivityUseCase {
   async findOne(id: string) {
     const activity = await this.activityRepository.findById(id);
 
-    if (!activity) throw new NoteNotFoundException();
+    if (!activity) throw new ActivityNotFoundException();
 
     return activity;
   }
@@ -58,7 +58,7 @@ export class ActivityUseCase {
   }: ActivityUpdateProps): Promise<Activity | undefined> {
     const existActivity = await this.activityRepository.findById(id);
 
-    if (!existActivity) throw new NoteNotFoundException();
+    if (!existActivity) throw new ActivityNotFoundException();
 
     const activity = new Activity(
       {
@@ -78,7 +78,7 @@ export class ActivityUseCase {
   async delete(id: string) {
     const existActivity = await this.activityRepository.findById(id);
 
-    if (!existActivity) throw new NoteNotFoundException();
+    if (!existActivity) throw new ActivityNotFoundException();
 
     return this.activityRepository.delete(id);
   }

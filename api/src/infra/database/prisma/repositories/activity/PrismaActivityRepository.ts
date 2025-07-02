@@ -9,7 +9,7 @@ export class PrismaActivityRepository {
   async upsert(notes: Activity) {
     const activityRaw = PrismaActivityMapper.toCreate(notes);
 
-    const createNote = await this.prisma.activity.upsert({
+    const createActivity = await this.prisma.activity.upsert({
       where: {
         id: activityRaw.id,
       },
@@ -17,6 +17,7 @@ export class PrismaActivityRepository {
         name: activityRaw.name,
         intensity: activityRaw.intensity,
         duration: activityRaw.duration,
+        updatedAt: activityRaw.updatedAt,
       },
       create: {
         id: activityRaw.id,
@@ -29,36 +30,36 @@ export class PrismaActivityRepository {
       },
     });
 
-    return createNote;
+    return createActivity;
   }
 
   async findAll(user_id: string) {
-    const allNotes = await this.prisma.activity.findMany({
+    const allActivities = await this.prisma.activity.findMany({
       where: {
         user_id: user_id,
       },
     });
 
-    return allNotes;
+    return allActivities;
   }
 
   async findById(id: string) {
-    const note = await this.prisma.activity.findUnique({
+    const activity = await this.prisma.activity.findUnique({
       where: {
         id: id,
       },
     });
 
-    return note;
+    return activity;
   }
 
   async delete(id: string) {
-    const deleteNote = await this.prisma.activity.delete({
+    const deleteActivity = await this.prisma.activity.delete({
       where: {
         id: id,
       },
     });
 
-    return deleteNote;
+    return deleteActivity;
   }
 }
