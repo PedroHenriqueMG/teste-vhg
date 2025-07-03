@@ -1,13 +1,13 @@
-import { client } from '@/api';
-import { getToken } from '@/lib/auth/utils';
-import { useAlertError } from '@/lib/hooks/use-alert-error';
-import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { z } from 'zod';
+
+import { client } from '@/api';
+import { useAlertError } from '@/lib/hooks/use-alert-error';
+import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
 
 const intensidades = ['Baixa', 'Média', 'Alta'] as const;
 const duracoes = ['30 min', '45 min', '60 min', '90 min'] as const;
@@ -88,34 +88,35 @@ export function ModalRegisterActivity({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-end bg-black/40">
-        <View className="bg-white rounded-t-2xl p-6 pb-8 mx-2">
-          <View className="flex-row justify-between items-center mb-4">
+        <View className="mx-2 rounded-t-2xl bg-white p-6 pb-8">
+          <View className="mb-4 flex-row items-center justify-between">
             <Text className="text-2xl font-bold">Registre sua atividade</Text>
             <TouchableOpacity onPress={onClose} accessibilityLabel="Fechar">
               <Text className="text-xl">✖️</Text>
             </TouchableOpacity>
           </View>
 
-          <Text className="font-semibold mb-1">Nome</Text>
+          <Text className="mb-1 font-semibold">Nome</Text>
           <Controller
             control={control}
             name="name"
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                className="border border-gray-300 rounded-lg px-3 py-2 mb-4"
+                className="mb-4 rounded-lg border border-gray-300 px-3 py-2"
                 placeholder="Corrida, natação, musculação..."
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
+                autoFocus
               />
             )}
           />
           {errors.name && (
-            <Text className="text-red-500 text-sm">{errors.name.message}</Text>
+            <Text className="text-sm text-red-500">{errors.name.message}</Text>
           )}
 
-          <Text className="font-semibold mb-1">Intensidade</Text>
-          <View className="mb-4">
+          <Text className="mb-1 font-semibold">Intensidade</Text>
+          <View style={{ zIndex: intensidadeOpen ? 2000 : 1000 }}>
             <Controller
               control={control}
               name="intensity"
@@ -139,21 +140,21 @@ export function ModalRegisterActivity({
                     borderRadius: 8,
                     backgroundColor: 'white',
                   }}
-                  zIndex={2000}
-                  zIndexInverse={2000}
+                  zIndex={intensidadeOpen ? 2000 : 1000}
+                  zIndexInverse={intensidadeOpen ? 1000 : 2000}
                   listMode="SCROLLVIEW"
                 />
               )}
             />
             {errors.intensity && (
-              <Text className="text-red-500 text-sm">
+              <Text className="text-sm text-red-500">
                 {errors.intensity.message}
               </Text>
             )}
           </View>
 
-          <Text className="font-semibold mb-1 mt-2">Duração</Text>
-          <View className="mb-4">
+          <Text className="mb-1 mt-2 font-semibold">Duração</Text>
+          <View style={{ zIndex: duracaoOpen ? 2000 : 1000 }}>
             <Controller
               control={control}
               name="duration"
@@ -177,30 +178,30 @@ export function ModalRegisterActivity({
                     borderRadius: 8,
                     backgroundColor: 'white',
                   }}
-                  zIndex={3000}
-                  zIndexInverse={1000}
+                  zIndex={duracaoOpen ? 2000 : 1000}
+                  zIndexInverse={duracaoOpen ? 1000 : 2000}
                   listMode="SCROLLVIEW"
                 />
               )}
             />
             {errors.duration && (
-              <Text className="text-red-500 text-sm">
+              <Text className="text-sm text-red-500">
                 {errors.duration.message}
               </Text>
             )}
           </View>
 
           <TouchableOpacity
-            className="bg-black rounded-lg py-3 items-center mt-4"
+            className="mt-4 items-center rounded-lg bg-black py-3"
             onPress={handleSubmit(handleRegister)}
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <Text className="text-white text-base font-bold">
+              <Text className="text-base font-bold text-white">
                 Registrando...
               </Text>
             ) : (
-              <Text className="text-white text-base font-bold">
+              <Text className="text-base font-bold text-white">
                 Registrar atividade
               </Text>
             )}

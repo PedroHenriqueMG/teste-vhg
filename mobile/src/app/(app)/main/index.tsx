@@ -1,14 +1,16 @@
-import { client } from '@/api';
-import { ModalRegisterActivity } from '@/app/(app)/main/_components/ModalRegisterActivity';
-import { Button, ButtonText } from '@/components/ui/button';
-import { Activity } from '@/types/activity';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { ModalEditActivity } from './_components/ModalEditActivity';
-import { ModalDeleteActivity } from './_components/ModalDeleteActivity';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { client } from '@/api';
+import { ModalRegisterActivity } from '@/app/(app)/main/_components/modal-register-activity';
+import { Button, ButtonText } from '@/components/ui/button';
 import { useAlertError } from '@/lib/hooks/use-alert-error';
+import { type Activity } from '@/types/activity';
+
+import { ModalDeleteActivity } from './_components/modal-delete-activity';
+import { ModalEditActivity } from './_components/modal-edit-activity';
 
 export default function Main() {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -51,8 +53,8 @@ export default function Main() {
       {isLoading ? (
         <Text>Carregando...</Text>
       ) : (
-        <View className=" rounded-xl mt-6 mx-4 pb-4 shadow-md">
-          <View className="flex-row items-center gap-3 pt-6 px-4">
+        <View className=" mx-4 mt-6 rounded-xl pb-4 shadow-md">
+          <View className="flex-row items-center gap-3 px-4 pt-6">
             <Image
               source={require('@/assets/Logo.png')}
               style={{ width: 40, height: 40, resizeMode: 'contain' }}
@@ -64,16 +66,16 @@ export default function Main() {
             Suas atividades
           </Text>
 
-          <View className="bg-white rounded-xl mt-3 mx-4 p-4 shadow border border-gray-100 items-center">
-            <Text className="text-base font-medium mb-2">Atividades</Text>
-            <View className="w-24 h-12 items-center justify-center">
+          <View className="mx-4 mt-3 items-center rounded-xl border border-gray-100 bg-white p-4 shadow">
+            <Text className="mb-2 text-base font-medium">Atividades</Text>
+            <View className="h-12 w-24 items-center justify-center">
               <Text className="text-2xl font-bold">{activities?.length}</Text>
               <Text className="text-xs text-gray-500">registrados</Text>
             </View>
           </View>
 
-          <View className="bg-white rounded-xl mt-4 mx-4 p-4 shadow border border-gray-100">
-            <Text className="text-lg font-medium text-center mb-2">
+          <View className="mx-4 mt-4 rounded-xl border border-gray-100 bg-white p-4 shadow">
+            <Text className="mb-2 text-center text-lg font-medium">
               Resumo das atividades
             </Text>
             <View className="divide-y divide-gray-200">

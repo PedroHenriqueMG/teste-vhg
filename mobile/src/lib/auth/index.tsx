@@ -1,12 +1,13 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import * as SecureStore from 'expo-secure-store';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { client } from '@/api';
+import { type LoginFormData } from '@/app/auth/login';
 
 import { createSelectors } from '../utils';
 import type { TokenType } from './utils';
-import { getToken, removeToken, setToken } from './utils';
-import { LoginFormData } from '@/app/auth/login';
-import { client } from '@/api';
+import { removeToken, setToken } from './utils';
 
 interface AuthState {
   token: TokenType | null;
@@ -43,7 +44,7 @@ const secureStorage = {
 
 const _useAuth = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       status: 'idle',
       token: null,
       userEmail: null,

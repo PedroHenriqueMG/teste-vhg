@@ -1,12 +1,8 @@
+import { Slot, usePathname, useRouter } from 'expo-router';
+import { HousePlus, MessageSquarePlus, Settings } from 'lucide-react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
+
 import { useAuth } from '@/lib';
-import { Slot, useRouter, usePathname } from 'expo-router';
-import {
-  House,
-  HousePlus,
-  MessageSquarePlus,
-  Settings,
-} from 'lucide-react-native';
-import { View, TouchableOpacity, Text } from 'react-native';
 
 export default function AuthorizedLayout() {
   const router = useRouter();
@@ -22,7 +18,7 @@ export default function AuthorizedLayout() {
   return (
     <View className="flex-1 bg-white">
       <Slot />
-      <View className="absolute bottom-4 left-0 right-0 flex-row bg-white py-3 px-8 justify-between items-center border-t border-gray-200">
+      <View className="absolute inset-x-0 bottom-4 flex-row items-center justify-between border-t border-gray-200 bg-white px-8 py-3">
         <TouchableOpacity
           className="items-center"
           onPress={() => router.push('/chat')}
@@ -32,7 +28,7 @@ export default function AuthorizedLayout() {
             color={isActive('/chat') ? '#000' : '#6b7280'}
           />
           <Text
-            className={`text-xs ${isActive('/chat') ? 'text-black font-bold' : 'text-gray-500'}`}
+            className={`text-xs ${isActive('/chat') ? 'font-bold text-black' : 'text-gray-500'}`}
           >
             Chat
           </Text>
@@ -43,7 +39,7 @@ export default function AuthorizedLayout() {
         >
           <HousePlus size={20} color={isActive('/main') ? '#000' : '#6b7280'} />
           <Text
-            className={`text-xs ${isActive('/main') ? 'text-black font-bold' : 'text-gray-500'}`}
+            className={`text-xs ${isActive('/main') ? 'font-bold text-black' : 'text-gray-500'}`}
           >
             Inicio
           </Text>
@@ -57,7 +53,7 @@ export default function AuthorizedLayout() {
             color={isActive('/settings') ? '#000' : '#6b7280'}
           />
           <Text
-            className={`text-xs ${isActive('/settings') ? 'text-black font-bold' : 'text-gray-500'}`}
+            className={`text-xs ${isActive('/settings') ? 'font-bold text-black' : 'text-gray-500'}`}
           >
             Configuração
           </Text>

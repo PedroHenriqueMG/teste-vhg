@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+
 import { client } from '@/api';
 import { useAlertError } from '@/lib/hooks/use-alert-error';
 import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
-import { Activity } from '@/types/activity';
-import React, { useState } from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { type Activity } from '@/types/activity';
 
 export function ModalDeleteActivity({
   visible,
@@ -40,38 +41,38 @@ export function ModalDeleteActivity({
       transparent
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-center items-center bg-black/40">
-        <View className="bg-white rounded-2xl p-6 w-11/12 max-w-md">
-          <View className="flex-row justify-between items-center mb-3">
+      <View className="flex-1 items-center justify-center bg-black/40">
+        <View className="w-11/12 max-w-md rounded-2xl bg-white p-6">
+          <View className="mb-3 flex-row items-center justify-between">
             <Text className="text-2xl font-bold">Excluir atividade</Text>
             <TouchableOpacity onPress={onClose} accessibilityLabel="Fechar">
               <Text className="text-xl">✖️</Text>
             </TouchableOpacity>
           </View>
-          <Text className="text-gray-500 text-base mb-6">
+          <Text className="mb-6 text-base text-gray-500">
             Deseja apagar a{' '}
             <Text className="font-semibold">{activity?.name}</Text>?{'\n'}
             Confirme no botão abaixo para concluir a exclusão da atividade!
           </Text>
           <View className="flex-row gap-2">
             <TouchableOpacity
-              className="flex-1 bg-gray-100 rounded-lg py-3 items-center mr-2"
+              className="mr-2 flex-1 items-center rounded-lg bg-gray-100 py-3"
               onPress={onClose}
             >
-              <Text className="text-base text-gray-500 font-medium">
+              <Text className="text-base font-medium text-gray-500">
                 Cancelar
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="flex-1 bg-red-700 rounded-lg py-3 items-center flex-row justify-center"
+              className="flex-1 flex-row items-center justify-center rounded-lg bg-red-700 py-3"
               onPress={handleDelete}
             >
               {isDeleting ? (
-                <Text className="text-white text-base font-medium mr-2">
+                <Text className="mr-2 text-base font-medium text-white">
                   Excluindo...
                 </Text>
               ) : (
-                <Text className="text-white text-base font-medium flex-row items-center justify-center">
+                <Text className="flex-row items-center justify-center text-base font-medium text-white">
                   Excluir atividade
                 </Text>
               )}

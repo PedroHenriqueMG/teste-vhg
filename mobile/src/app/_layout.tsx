@@ -10,7 +10,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { APIProvider } from '@/api';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { config } from '@/components/ui/gluestack-ui-provider/config';
-import { hydrateAuth, loadSelectedTheme } from '@/lib';
+import { loadSelectedTheme } from '@/lib';
 import { AlertErrorProvider } from '@/lib/hooks/use-alert-error';
 import { AlertSuccessProvider } from '@/lib/hooks/use-alert-success';
 
@@ -27,7 +27,6 @@ async function hideSplash() {
       duration: 500,
       fade: true,
     });
-    hydrateAuth();
     loadSelectedTheme();
   } finally {
     await SplashScreen.hideAsync();

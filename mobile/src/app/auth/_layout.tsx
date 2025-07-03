@@ -1,6 +1,7 @@
-import { useAuth } from '@/lib';
 import { Slot, useRouter } from 'expo-router';
 import { View } from 'react-native';
+
+import { useAuth } from '@/lib';
 
 export default function UnauthorizedLayout() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function UnauthorizedLayout() {
   }
 
   return (
-    <View className="flex-1 bg-white justify-center">
+    <View className="flex-1 justify-center bg-white">
       <Slot />
     </View>
   );

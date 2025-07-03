@@ -1,21 +1,22 @@
-import React, { useState, useRef } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { ArrowLeft, Pencil } from 'lucide-react-native';
+import React, { useRef, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+
 import { client } from '@/api';
-import { ArrowLeft, Pencil } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
 import { useAlertError } from '@/lib/hooks/use-alert-error';
 
 interface Message {
@@ -67,7 +68,7 @@ export default function Chat() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View
-        className="flex-row items-center justify-between px-4 pt-6 pb-4 border-b border-gray-200"
+        className="flex-row items-center justify-between border-b border-gray-200 px-4 pb-4 pt-6"
         style={{ paddingTop: insets.top + 12 }}
       >
         <TouchableOpacity onPress={() => router.push('/main')}>
@@ -75,7 +76,7 @@ export default function Chat() {
         </TouchableOpacity>
         {isEditing ? (
           <TextInput
-            className="text-lg font-bold flex-1 text-center -ml-6 bg-transparent"
+            className="-ml-6 flex-1 bg-transparent text-center text-lg font-bold"
             value={chatName}
             onChangeText={setChatName}
             onBlur={() => setIsEditing(false)}
@@ -85,7 +86,7 @@ export default function Chat() {
             placeholderTextColor="#888"
           />
         ) : (
-          <Text className="text-lg font-bold flex-1 text-center -ml-6">
+          <Text className="-ml-6 flex-1 text-center text-lg font-bold">
             {chatName}
           </Text>
         )}
@@ -105,7 +106,7 @@ export default function Chat() {
             className={`mb-3 flex-row ${item.from === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <View
-              className={`rounded-xl px-4 py-3 bg-white shadow-sm max-w-[80%] ${item.from === 'user' ? '' : ''}`}
+              className={`max-w-[80%] rounded-xl bg-white px-4 py-3 shadow-sm ${item.from === 'user' ? '' : ''}`}
               style={{
                 alignSelf: item.from === 'user' ? 'flex-end' : 'flex-start',
                 borderRadius: 16,
@@ -116,7 +117,7 @@ export default function Chat() {
                 elevation: 2,
               }}
             >
-              <Text className="text-black text-base">{item.text}</Text>
+              <Text className="text-base text-black">{item.text}</Text>
             </View>
           </View>
         )}
@@ -128,11 +129,11 @@ export default function Chat() {
         style={{ position: 'absolute', left: 0, right: 0, bottom: 40 }}
       >
         <View
-          className="flex-row items-center bg-[#F3F3F3] px-3 py-2 m-3 rounded-xl"
+          className="m-3 flex-row items-center rounded-xl bg-[#F3F3F3] px-3 py-2"
           style={{ marginBottom: insets.bottom + 4 }}
         >
           <TextInput
-            className="flex-1 text-base px-2"
+            className="flex-1 px-2 text-base"
             placeholder="O que tem na sua mente?"
             value={input}
             onChangeText={setInput}

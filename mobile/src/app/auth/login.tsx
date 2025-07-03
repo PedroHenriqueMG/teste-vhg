@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { router } from 'expo-router';
-import { Text, View, Image, TouchableOpacity, Alert } from 'react-native';
-import { Button, ButtonText } from '@/components/ui/button';
-import { Input, InputSlot, InputField, InputIcon } from '@/components/ui/input';
-import { Eye, EyeOff } from 'lucide-react-native';
-import { useForm, Controller } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { router } from 'expo-router';
+import { Eye, EyeOff } from 'lucide-react-native';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { z } from 'zod';
+
+import { Button, ButtonText } from '@/components/ui/button';
+import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
 import { useAuth } from '@/lib';
 import { useAlertError } from '@/lib/hooks/use-alert-error';
 import { useAlertSuccess } from '@/lib/hooks/use-alert-success';
@@ -43,9 +44,9 @@ export default function Login() {
   };
 
   return (
-    <View className="size-full flex-1 items-center justify-center p-6 bg-white">
+    <View className="size-full flex-1 items-center justify-center bg-white p-6">
       <View className="w-full max-w-sm space-y-6">
-        <View className="items-center mb-2">
+        <View className="mb-2 items-center">
           <View className="rounded-lg p-2">
             <Image
               source={require('@/assets/Logo.png')}
@@ -54,7 +55,7 @@ export default function Login() {
           </View>
         </View>
 
-        <Text className="text-3xl font-extrabold text-center mb-2">Login</Text>
+        <Text className="mb-2 text-center text-3xl font-extrabold">Login</Text>
 
         <View className="space-y-3">
           <Controller
@@ -70,13 +71,13 @@ export default function Login() {
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="text-base text-black px-0"
+                  className="px-0 text-base text-black"
                 />
               </Input>
             )}
           />
           {errors.email && (
-            <Text className="text-red-500 text-sm">{errors.email.message}</Text>
+            <Text className="text-sm text-red-500">{errors.email.message}</Text>
           )}
 
           <Controller
@@ -91,7 +92,7 @@ export default function Login() {
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="text-base text-black px-0"
+                  className="px-0 text-base text-black"
                 />
                 <InputSlot onPress={() => setShowPassword((v) => !v)}>
                   <InputIcon as={showPassword ? EyeOff : Eye} color="#888" />
@@ -100,7 +101,7 @@ export default function Login() {
             )}
           />
           {errors.password && (
-            <Text className="text-red-500 text-sm">
+            <Text className="text-sm text-red-500">
               {errors.password.message}
             </Text>
           )}
@@ -117,10 +118,10 @@ export default function Login() {
           </ButtonText>
         </Button>
 
-        <View className="flex-row justify-center items-center mt-2">
+        <View className="mt-2 flex-row items-center justify-center">
           <Text className="text-base text-gray-700">Não possui conta? </Text>
           <TouchableOpacity onPress={() => router.push('/auth/register')}>
-            <Text className="text-base text-blue-600 font-semibold">
+            <Text className="text-base font-semibold text-blue-600">
               Criar conta →
             </Text>
           </TouchableOpacity>
